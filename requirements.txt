@@ -1,4 +1,6 @@
 torch
 pandas
 numpy
-
+codecs
+jieba
+bert-serving-client
