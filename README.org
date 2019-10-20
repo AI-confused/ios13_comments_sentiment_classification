@@ -1,1 +1,10 @@
-
+* Apple IOS13 Comments Sentiment Classification
+** Requirements
+   + pip install -r requirements.txt
+   + 需要一台能运行bert-as-service的服务器，最好有GPU，然后pip install bert-service-server
+** Experiments
+*** bert生成的词向量接入text-cnn网络
+**** 先二分类为与iOS13有关&无关，再从有关的类别中进行情感分类
+***** 二分类
+*** bert pytorch finetune  
+     
