@@ -1,1 +1,5 @@
 # custom
+/output/model_textcnn/
+/data/fold_*/
+/data/test_clean.csv
+/data/train_clean.csv
