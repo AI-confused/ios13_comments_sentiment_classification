@@ -36,7 +36,7 @@ class ConfMatrix(object):
     
     
 
-def train(model, train, train_label, loss_func, optimizer, epoch, batch, device):
+def train(model, train, train_label, loss_func, optimizer, epoch, batch, device, eval_result):
     model.train()
     accu_loss = 0
     for _ in range(len(train)):
@@ -50,29 +50,31 @@ def train(model, train, train_label, loss_func, optimizer, epoch, batch, device)
         loss.backward()
         optimizer.step()
     now = datetime.datetime.now()
+    with open(eval_result, 'a') as f:
+        f.write('['+str(now)+']:epoch '+str(epoch)+' loss: '+str(accu_loss/len(train))+'\n')
     print('['+str(now)+']:epoch '+str(epoch)+' loss: '+str(accu_loss/len(train)))
 
 
-def eval(model, dev, dev_label, batch, epoch, device, num_label):
+def eval(model, dev, dev_label, batch, epoch, device, num_label, eval_result):
     model.eval()
     right_count = 0
     confmatrix = ConfMatrix(num_label)
     for _ in range(len(dev)):
         output = model.forward(Variable(torch.FloatTensor(dev[_])).to(device)).detach()
         output = output.max(1)[1]
-#             print(output)
         for y, label in enumerate(dev_label[_]):
             if output.cpu().numpy()[y] == label:
                 right_count += 1
             confmatrix.change_conf(label, output.cpu().numpy()[y])
     accuracy = float(right_count/(batch*(len(dev)-1)+len(dev[-1])))
-#         print(confmatrix.conf)
     macro_f1_list = []
     for j in range(num_label):
         macro_f1_list.append(confmatrix.get_macro_f1(j, num_label))
     macro_f1 = confmatrix.get_average_macro_f1(macro_f1_list)
-#         print(batch*(len(dev)-1)+len(dev[-1]))
     now = datetime.datetime.now()
+    with open(eval_result, 'a') as f:
+        f.write('['+str(now)+']:epoch '+str(epoch)+': accuracy: '+str(accuracy) + '| macro f1: ' + str(macro_f1)+'\n')
+        f.write('*'*30+'\n')
     print('['+str(now)+']:epoch '+str(epoch)+': accuracy: '+str(accuracy) + '| macro f1: ' + str(macro_f1))
     return macro_f1
 
@@ -85,12 +87,12 @@ def write_csv(content, csv_file):
     
 def predict(model, test, device, file):
     model.eval()
+    write_csv(['id', 'label_1', 'label_2', 'label_3' ,'label4'], file)
     for _ in range(len(test)):
         output = model.forward(Variable(torch.FloatTensor(test[_])).to(device)).detach()
         output = output.cpu().numpy().tolist()
         for item in output:
             write_csv(item, file)
-
 
 
 
