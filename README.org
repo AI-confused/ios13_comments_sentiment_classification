@@ -75,7 +75,7 @@
         + 卷积核尺寸[2,3]*768，卷积核数目768，跑了5折结果如SN：0-4
         + 卷积核尺寸设置为[2,3,4]*768，跑2折结果如SN：5-6
 *** bert pytorch finetune
-**** 参考了CCF的一个baseline[[https://github.com/guoday/CCF-BDCI-Sentiment-Analysis-Baseline]]
-***** 使用bert base的预训练模型参数，按照baseline的方法，取title&content输入模型进行Bert微调，content划分为3段，每段的max_seq_len=256，实验结果没有之前textcnn高，只有0.50-0.52左右，因为结果较差，并不打算保存模型
-***** 使用roberta large的预训练参数，在上一步的基础上进行修改，去掉了title字段，只输入content进行微调，content不划分子段落，max_seq_len=256，跑完5折，准确率大致在0.60左右，实验结果记录保存在/output/roberta_large/
-***** 由于使用roberta large的实验结果并没有预期那么好，而且训练时间很长，因此继续使用bert base的预训练参数，加大训练的batch size=64，适当缩小max_seq_len=200，
+**** 参考了CCF的一个baseline  [[https://github.com/guoday/CCF-BDCI-Sentiment-Analysis-Baseline]]
+     1) 使用bert base的预训练模型参数，按照baseline的方法，取title&content输入模型进行Bert微调，content划分为3段，每段的max_seq_len=256，实验结果没有之前textcnn高，只有0.50-0.52左右，因为结果较差，并不打算保存模型
+     2) 使用roberta large的预训练参数，在上一步的基础上进行修改，去掉了title字段，只输入content进行微调，content不划分子段落，max_seq_len=256，跑完5折，准确率大致在0.60左右，实验结果记录保存在/output/roberta_large/
+     3) 由于使用roberta large的实验结果并没有预期那么好，而且训练时间很长，因此继续使用bert base的预训练参数，加大训练的batch size=64，适当缩小max_seq_len=200，
