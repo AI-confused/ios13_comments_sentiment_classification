@@ -6,7 +6,7 @@ import numpy as np
 
 class CNN_Text(nn.Module):
     
-    def __init__(self, input_channel, kernel_num, kernel_size, output, dropout, concat):
+    def __init__(self, input_channel, kernel_num, kernel_size, output, dropout):
         super(CNN_Text, self).__init__()
         self.input_channel = input_channel
         self.kernel_num = kernel_num
@@ -14,11 +14,7 @@ class CNN_Text(nn.Module):
         self.dropout = dropout
         self.output = output
 
-
-        if concat == 2:
-            self.convs1 = nn.ModuleList([nn.Conv2d(self.input_channel, self.kernel_num, (K, 768*2)) for K in self.kernel_size])
-        else:
-            self.convs1 = nn.ModuleList([nn.Conv2d(self.input_channel, self.kernel_num, (K, 768)) for K in self.kernel_size])
+        self.convs1 = nn.ModuleList([nn.Conv2d(self.input_channel, self.kernel_num, (K, 768)) for K in self.kernel_size])
 
         self.dropout = nn.Dropout(self.dropout)
         
