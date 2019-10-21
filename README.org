@@ -1,7 +1,8 @@
 * Apple IOS13 Comments Sentiment Classification
 ** Requirements
    + pip install -r requirements.txt
-   + 需要一台能运行bert-as-service的服务器，最好有GPU，然后pip install bert-service-server
+   + [[https://github.com/hanxiao/bert-as-service]]
+   + 需要一台能运行bert-as-service的服务器，最好有GPU，然后 pip install bert-serving-server
 ** Experiments
 *** bert生成的词向量接入text-cnn网络
 **** 先二分类为与iOS13有关&无关，再从有关的类别中进行情感分类
@@ -79,3 +80,19 @@
      1) 使用bert base的预训练模型参数，按照baseline的方法，取title&content输入模型进行Bert微调，content划分为3段，每段的max_seq_len=256，实验结果没有之前textcnn高，只有0.50-0.52左右，因为结果较差，并不打算保存模型
      2) 使用roberta large的预训练参数，在上一步的基础上进行修改，去掉了title字段，只输入content进行微调，content不划分子段落，max_seq_len=256，跑完5折，准确率大致在0.60左右，实验结果记录保存在/output/roberta_large/
      3) 由于使用roberta large的实验结果并没有预期那么好，而且训练时间很长，因此继续使用bert base的预训练参数，加大训练的batch size=64，适当缩小max_seq_len=200，
+** Usage-textcnn
+*** 服务器启动bert-as-service
+    + [[https://github.com/hanxiao/bert-as-service]] bert-as-service
+    + bert-serving-start -model_dir 'your pretrained model dir' -num_worker=4 -max_seq_len=200 -pooling_strategy=NONE -port=8190
+*** 清洗数据
+    + cd script/
+    + bash clean.sh
+*** n折交叉训练
+    + cd src/
+    + python3 split_data.py -k=5 (5折)
+*** train
+    + cd script/
+    + bash train.sh
+*** 模型融合
+    + cd src/
+    + python get_test_results.py -k=5 -output=../output/model_textcnn/final.csv
