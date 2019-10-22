@@ -87,7 +87,7 @@ def write_csv(content, csv_file):
     
 def predict(model, test, device, file):
     model.eval()
-    write_csv(['id', 'label_1', 'label_2', 'label_3' ,'label4'], file)
+    write_csv(['label_1', 'label_2', 'label_3' ,'label4'], file)
     for _ in range(len(test)):
         output = model.forward(Variable(torch.FloatTensor(test[_])).to(device)).detach()
         output = output.cpu().numpy().tolist()
