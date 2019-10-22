@@ -79,7 +79,7 @@
 **** 参考了CCF的一个baseline  [[https://github.com/guoday/CCF-BDCI-Sentiment-Analysis-Baseline]]
      1) 使用bert base的预训练模型参数，按照baseline的方法，取title&content输入模型进行Bert微调，content划分为3段，每段的max_seq_len=256，实验结果没有之前textcnn高，只有0.50-0.52左右，因为结果较差，并不打算保存模型
      2) 使用roberta large的预训练参数，在上一步的基础上进行修改，去掉了title字段，只输入content进行微调，content不划分子段落，max_seq_len=256，跑完5折，准确率大致在0.60左右，实验结果记录保存在/output/roberta_large/
-     3) 由于使用roberta large的实验结果并没有预期那么好，而且训练时间很长，因此继续使用bert base的预训练参数，加大训练的batch size=64，适当缩小max_seq_len=200，
+     3) 由于使用roberta large的实验结果并没有预期那么好，而且训练时间很长，因此继续使用bert base的预训练参数，加大训练的batch size=64，适当缩小max_seq_len=200，跑完5折后，准确率在0.61左右，实验结果保存在/output/bert_base/
 ** Usage-textcnn
 *** 服务器启动bert-as-service
     + [[https://github.com/hanxiao/bert-as-service]] bert-as-service
@@ -96,3 +96,20 @@
 *** 模型融合
     + cd src/
     + python get_test_results.py -k=5 -output=../output/model_textcnn/final.csv
+*** 十折交叉训练实验结果
+    | SN | kernel_num | kernel_size | max_seq |   lr | batch | accuracy | macro_f1 |
+    |----+------------+-------------+---------+------+-------+----------+----------|
+    |  0 |        768 | [2,3]*768   |     200 | 1e-3 |   512 |   0.6260 |   0.6288 |
+    |  1 |            |             |         |      |       |   0.6088 |   0.6043 |
+    |  2 |            |             |         |      |       |   0.6184 |   0.6157 |
+    |  3 |            |             |         |      |       |   0.6301 |   0.6286 |
+    |  4 |            |             |         |      |       |   0.6432 |   0.6401 |
+    |  5 |            |             |         |      |       |   0.6163 |   0.6146 |
+    |  6 |            |             |         |      |       |   0.6232 |   0.6247 |
+    |  7 |            |             |         |      |       |   0.6191 |   0.6190 |
+    |  8 |            |             |         |      |       |   0.6067 |   0.6069 |
+    |  9 |            |             |         |      |       |   0.6247 |   0.6224 |
+    issue:十折模型跑测试集的结果融合后，输出的文件在/output/final.csv
+    输出各个label的数目为[392, 1354, 1625, 596]，预计大部分评论和iOS13有关，并且积极和中立的态度占大多数，消极的态度少数，综合来说iOS13的观众体验感不错～
+*** 由于时间有限，目前的实验结果还有待提高，会继续在这里更新新的模型和结果-_-
+
