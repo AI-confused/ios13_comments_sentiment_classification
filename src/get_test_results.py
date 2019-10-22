@@ -25,9 +25,19 @@ if __name__ == '__main__':
         df['4']+=temp['label_3']/args.k
     print(df['1'].mean())
 
-    df['label']=np.argmax(df[['1','2','3', '4']].values,-1)
+    df['label']=np.argmax(df[['1','2','3', '4']].values,-1)+1 # 1,2,3,4
     df[['id','label']].to_csv(args.output,index=False)
-
+    nums = [n1=0, n2=0, n3=0, n4=0]
+    for _ in df.index:
+        if df.loc[_, 'label'] == 1:
+            nums[n1] += 1
+        elif df.loc[_, 'label'] == 2:
+            nums[n2] += 1
+        elif df.loc[_, 'label'] == 3:
+            nums[n3] += 1
+        else:
+            nums[n4] += 1
+    print(nums)
 
 
         
