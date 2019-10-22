@@ -2,7 +2,7 @@ k=10
 mkdir ../output/model_textcnn
 mkdir ../output/model_textcnn/fold_$k
 cd ../src
-for((i=7;i<k;i++));  
+for((i=0;i<k;i++));  
 do   
 python3 main.py \
 -server-ip='10.15.82.239' \
