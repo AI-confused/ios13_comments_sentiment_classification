@@ -70,6 +70,8 @@ class MyTaskProcessor(DataProcessor):
         batch_labels = [] 
         for (i, line) in enumerate(lines):  
             text = line[3] #content
+            if text=='':
+                text = '无'
             text_examples.append(text)
             if set_type != 'test': 
                 label = int(line[4])-1    # 0，1，2，3
