@@ -1,4 +1,4 @@
-* Apple IOS13 Comments Sentiment Classification
+* Comments Sentiment Classification
 ** Requirements
    + pip install -r requirements.txt
    + [[https://github.com/hanxiao/bert-as-service]]
